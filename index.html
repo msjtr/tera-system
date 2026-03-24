@@ -7,8 +7,6 @@
 
 <title>منصة تيرا</title>
 
-<meta name="description" content="طلب شراء بطاقات سوا - منصة تيرا">
-
 <link rel="stylesheet" href="css/style.css">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
 
@@ -18,7 +16,7 @@
 
 <div class="container">
 
-<img src="assets/logo.svg" class="logo" alt="شعار منصة تيرا">
+<img src="assets/logo.svg" class="logo">
 
 <h1>مرحباً بكم في منصة تيرا</h1>
 <p class="subtitle">عالم بلا حدود</p>
@@ -28,32 +26,29 @@
 <h2>طلب شراء بطاقات سوا</h2>
 
 <div class="row">
-<input type="text" id="fname" placeholder="الاسم الأول" required autofocus>
-<input type="text" id="mname" placeholder="الاسم الثاني">
-<input type="text" id="lname" placeholder="اسم العائلة" required>
+<input id="fname" placeholder="الاسم الأول">
+<input id="mname" placeholder="الاسم الثاني">
+<input id="lname" placeholder="اسم العائلة">
 </div>
 
-<input 
-type="tel" 
-id="phone" 
-placeholder="5XXXXXXXX" 
-maxlength="9"
-pattern="[0-9]*"
-inputmode="numeric"
-required
->
+<input id="phone" placeholder="5XXXXXXXX" maxlength="9">
 
 <div class="question">
 <p>هل لديكم دفعة أولى؟</p>
-<button type="button" onclick="setMode('yes',event)">نعم</button>
-<button type="button" onclick="setMode('no',event)">لا</button>
+<button onclick="setMode('yes',event)">نعم</button>
+<button onclick="setMode('no',event)">لا</button>
 </div>
 
-<div id="plans"></div>
+<!-- Slider -->
+<div class="slider-container">
+    <div id="slider" class="slider"></div>
+</div>
+
+<div id="pagination"></div>
 
 <div class="actions">
-<button type="button" class="confirm" onclick="confirmOrder()">تأكيد الطلب</button>
-<button type="button" class="cancel" onclick="resetAll()">إلغاء الطلب</button>
+<button class="confirm" onclick="confirmOrder()">تأكيد الطلب</button>
+<button class="cancel" onclick="resetAll()">إلغاء الطلب</button>
 </div>
 
 </div>
@@ -65,7 +60,7 @@ required
 <p>جاري إرسال الطلب...</p>
 <div class="loader"></div>
 <p id="status"></p>
-<button type="button" onclick="closeModal()">إغلاق</button>
+<button onclick="closeModal()">إغلاق</button>
 </div>
 </div>
 
