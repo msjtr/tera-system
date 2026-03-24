@@ -65,12 +65,13 @@ if(!swipeInitialized){
 initSwipe();
 swipeInitialized = true;
 }
-}
+function updateSlider(smooth = true){
 
-function updateSlider(smooth=true){
-let container = document.querySelector(".slider-container");
-let slider = document.getElementById("slider");slider.style.transition = smooth ? "transform 0.4s ease" : "none";
-slider.style.transform = `translateX(${currentPage * -100}%)`;
+    let slider = document.getElementById("slider");
+
+    slider.style.transition = smooth ? "transform 0.4s ease" : "none";
+
+    slider.style.transform = `translateX(${currentPage * -100}%)`;
 }
 
 function renderProgress(){
@@ -111,7 +112,6 @@ function initSwipe(){
 
 let container = document.querySelector(".slider-container");
 let slider = document.getElementById("slider");
-
 let startX = 0;
 let currentX = 0;
 let isDragging = false;
