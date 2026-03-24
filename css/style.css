@@ -149,3 +149,36 @@ margin:auto;
 @keyframes spin {
 100% {transform: rotate(360deg);}
 }
+
+
+.pagination {
+display: flex;
+justify-content: center;
+align-items: center;
+gap: 10px;
+margin-top: 15px;
+}
+
+.pagination button {
+background: #1e293b;
+color: white;
+padding: 8px 10px;
+border-radius: 6px;
+}
+
+.dots {
+display: flex;
+gap: 5px;
+}
+
+.dots span {
+width: 8px;
+height: 8px;
+background: #555;
+border-radius: 50%;
+cursor: pointer;
+}
+
+.dots span.active-dot {
+background: #22c55e;
+}
