@@ -1,69 +1,78 @@
-const packages = [
-  {id:1,total:500,net:250},
-  {id:2,total:1000,net:500},
-  {id:3,total:1500,net:800},
-  {id:4,total:1880,net:1000},
-  {id:5,total:2000,net:1050},
-  {id:6,total:2500,net:1300}
-];
+let selectedPlan = null;
 
-let selectedPackage = null;
+// اختيار باقة
+function selectPlan(btn) {
+  const card = btn.parentElement;
+  selectedPlan = {
+    name: card.dataset.plan,
+    amount: card.dataset.amount,
+    net: card.dataset.net
+  };
 
-document.getElementById("packageSelect").addEventListener("change", function(){
-  const pkg = packages.find(p => p.id == this.value);
-  if(!pkg) return;
+  alert("تم اختيار " + selectedPlan.name);
+}
 
-  selectedPackage = pkg;
+// تغيير الدفعة
+document.querySelectorAll('input[name="payment"]').forEach(radio => {
+  radio.addEventListener('change', e => {
+    const value = e.target.value;
 
-  document.getElementById("result").innerHTML = `
-    <p>القيمة: ${pkg.total} ريال</p>
-    <p class="net">الربح: ${pkg.net} ريال</p>
-  `;
+    document.querySelectorAll('.down-payment, .fees').forEach(el => {
+      if (value === "yes") {
+        el.classList.add('hidden');
+      } else {
+        el.classList.remove('hidden');
+      }
+    });
+  });
 });
 
+// تأكيد الطلب
 function confirmOrder() {
+  if (!selectedPlan) return alert("اختر باقة");
 
-  const first = document.getElementById("firstName").value;
-  const second = document.getElementById("secondName").value;
-  const third = document.getElementById("thirdName").value;
-  const phone = document.getElementById("phone").value;
+  const name = document.getElementById("firstName").value;
+  const mobile = document.getElementById("mobile").value;
 
-  if (!first || !second || !third || !phone || !selectedPackage) {
-    alert("أكمل البيانات");
-    return;
-  }
+  const modal = document.getElementById("modal");
+  const text = document.getElementById("modalText");
+  const loader = document.getElementById("loader");
 
-  const fullName = `${first} ${second} ${third}`;
-
-  if (!confirm("هل ترغب بإرسال الطلب؟")) return;
-
-  generatePDF(fullName, phone);
+  modal.style.display = "block";
+  loader.style.display = "block";
+  text.innerText = "جاري إرسال الطلب...";
 
   setTimeout(() => {
-    sendWhatsApp(fullName, phone);
-  }, 3000);
+    loader.style.display = "none";
+    text.innerText = "تم إرسال الطلب بنجاح";
+
+    sendWhatsApp(name, mobile);
+  }, 2000);
 }
 
-function cancelOrder() {
-  location.reload();
-}
+// واتساب
+function sendWhatsApp(name, mobile) {
+  const phone = "966555698774";
 
-function generatePDF(name, phone) {
-  const element = document.querySelector(".card");
-  html2pdf().from(element).save("tera-order.pdf");
-}
-
-function sendWhatsApp(name, phone) {
-  const msg = `
-طلب جديد
-
+  const msg = `طلب جديد منصة تيرا
 الاسم: ${name}
-الجوال: 966${phone}
+الجوال: ${mobile}
 
-الشريحة: ${selectedPackage.id}
-القيمة: ${selectedPackage.total}
-الربح: ${selectedPackage.net}
-  `;
+الشريحة: ${selectedPlan.name}
+القيمة: ${selectedPlan.amount}
+الصافي: ${selectedPlan.net}`;
 
-  window.open("https://wa.me/966555698774?text=" + encodeURIComponent(msg));
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
+  window.open(url);
+}
+
+// اغلاق
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+  resetForm();
+}
+
+// إعادة
+function resetForm() {
+  location.reload();
 }
