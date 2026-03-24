@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <title>Tera System</title>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 <style>
 body {
   font-family: Arial;
@@ -18,13 +20,18 @@ body {
   border-radius: 10px;
   max-width: 400px;
   margin: auto;
-  box-shadow: 0 0 10px #ddd;
 }
 
 input, select {
   width: 100%;
   padding: 10px;
-  margin-bottom: 15px;
+  margin-bottom: 10px;
+}
+
+.note {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
 }
 
 .result {
@@ -33,7 +40,7 @@ input, select {
   border-radius: 8px;
 }
 
-.net {
+.profit {
   color: green;
   font-weight: bold;
 }
@@ -47,9 +54,8 @@ button {
   cursor: pointer;
 }
 
-.confirm { background: green; color: white; }
-.cancel { background: red; color: white; }
 .whatsapp { background: #25D366; color: white; }
+.pdf { background: #333; color: white; }
 </style>
 </head>
 
@@ -59,8 +65,10 @@ button {
 
 <h2>💳 طلب بطاقات سوا</h2>
 
-<input type="text" id="name" placeholder="اسم العميل">
+<input type="text" id="name" placeholder="الاسم الكامل">
+
 <input type="text" id="phoneInput" placeholder="رقم الجوال">
+<div class="note">⚠️ اكتب رقم الجوال بدون 0 (مثال: 5XXXXXXXX)</div>
 
 <select id="packageSelect">
   <option value="">اختر الشريحة</option>
@@ -72,27 +80,23 @@ button {
   <option value="6">الشريحة السادسة</option>
 </select>
 
-<select id="paymentMethod">
-  <option value="">اختر طريقة الدفع</option>
-  <option>إمكان</option>
-  <option>تابي</option>
-  <option>تمارا</option>
-</select>
-
 <div id="result" class="result"></div>
 
-<button class="whatsapp" onclick="sendWhatsApp()">📲 إرسال الطلب واتساب</button>
+<button class="pdf" onclick="generatePDF()">📄 تحميل PDF</button>
+<button class="whatsapp" onclick="sendWhatsApp()">📲 إرسال واتساب</button>
 
 </div>
 
 <script>
+const { jsPDF } = window.jspdf;
+
 const packages = [
-  {id:1,cards:25,total:500,down:125,remaining:375,fees:125,net:250},
-  {id:2,cards:50,total:1000,down:250,remaining:750,fees:250,net:500},
-  {id:3,cards:75,total:1500,down:375,remaining:1125,fees:325,net:800},
-  {id:4,cards:94,total:1880,down:470,remaining:1410,fees:410,net:1000},
-  {id:5,cards:100,total:2000,down:500,remaining:1500,fees:450,net:1050},
-  {id:6,cards:125,total:2500,down:625,remaining:1875,fees:575,net:1300}
+  {id:1,cards:25,total:500,down:125,fees:125,net:250},
+  {id:2,cards:50,total:1000,down:250,fees:250,net:500},
+  {id:3,cards:75,total:1500,down:375,fees:325,net:800},
+  {id:4,cards:94,total:1880,down:470,fees:410,net:1000},
+  {id:5,cards:100,total:2000,down:500,fees:450,net:1050},
+  {id:6,cards:125,total:2500,down:625,fees:575,net:1300}
 ];
 
 let selectedPackage = null;
@@ -109,41 +113,50 @@ document.getElementById("packageSelect").addEventListener("change", function(){
     <p>💳 الدفعة الأولى: ${pkg.down} ريال</p>
     <p>📊 الرسوم: ${pkg.fees} ريال</p>
     <hr>
-    <p class="net">💵 الصافي: ${pkg.net} ريال</p>
+    <p class="profit">💰 الربح المتوقع: ${pkg.net} ريال</p>
   `;
 });
 
-function sendWhatsApp() {
+function generatePDF() {
+  if (!selectedPackage) return alert("اختر الشريحة");
 
   const name = document.getElementById("name").value;
-  const phoneInput = document.getElementById("phoneInput").value;
-  const payment = document.getElementById("paymentMethod").value;
+  const phone = document.getElementById("phoneInput").value;
 
-  if (!name || !phoneInput || !selectedPackage || !payment) {
-    alert("⚠️ يرجى تعبئة جميع البيانات");
+  const doc = new jsPDF();
+
+  doc.text(`طلب بطاقات سوا`, 10, 10);
+  doc.text(`الاسم: ${name}`, 10, 20);
+  doc.text(`الجوال: ${phone}`, 10, 30);
+  doc.text(`الشريحة: ${selectedPackage.id}`, 10, 40);
+  doc.text(`عدد البطاقات: ${selectedPackage.cards}`, 10, 50);
+  doc.text(`القيمة: ${selectedPackage.total}`, 10, 60);
+  doc.text(`الربح: ${selectedPackage.net}`, 10, 70);
+
+  doc.save("tera-order.pdf");
+}
+
+function sendWhatsApp() {
+  const name = document.getElementById("name").value;
+  const phoneInput = document.getElementById("phoneInput").value;
+
+  if (!name || !phoneInput || !selectedPackage) {
+    alert("⚠️ أكمل البيانات");
     return;
   }
 
   const message = `
-📦 طلب جديد
+طلب جديد
 
-👤 الاسم: ${name}
-📱 الجوال: ${phoneInput}
+الاسم: ${name}
+الجوال: 966${phoneInput}
 
-💳 الشريحة: ${selectedPackage.id}
-عدد البطاقات: ${selectedPackage.cards}
-القيمة: ${selectedPackage.total} ريال
-الدفعة الأولى: ${selectedPackage.down} ريال
-إجمالي الرسوم: ${selectedPackage.fees} ريال
-
-💰 الصافي: ${selectedPackage.net} ريال
-
-💳 طريقة الدفع: ${payment}
+الشريحة: ${selectedPackage.id}
+القيمة: ${selectedPackage.total}
+الربح: ${selectedPackage.net}
   `;
 
-  const phone = "966555698774";
-  const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
-
+  const url = "https://wa.me/966555698774?text=" + encodeURIComponent(message);
   window.open(url, "_blank");
 }
 </script>
