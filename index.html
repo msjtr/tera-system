@@ -1,35 +1,72 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>منصة تيرا</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
 <div class="container">
-  <div class="card">
 
-    <div class="logo">
-      <img src="assets/logo.svg">
+  <h1>منصة تيرا</h1>
+  <p>عالم بلا حدود</p>
+
+  <!-- النموذج -->
+  <div class="form">
+    <input type="text" id="firstName" placeholder="الاسم الأول">
+    <input type="text" id="secondName" placeholder="الاسم الثاني">
+    <input type="text" id="lastName" placeholder="اسم العائلة">
+    <input type="text" id="mobile" placeholder="5XXXXXXXX">
+
+    <!-- هل لديه دفعة -->
+    <div class="payment-option">
+      <label><input type="radio" name="payment" value="yes"> نعم</label>
+      <label><input type="radio" name="payment" value="no" checked> لا</label>
+    </div>
+  </div>
+
+  <!-- الباقات -->
+  <div class="cards">
+
+    <div class="card" data-plan="الشريحة الخامسة" data-amount="2000" data-net="1050">
+      <h3>الشريحة الخامسة 🔥</h3>
+      <p>القيمة: 2000 ريال</p>
+      <p class="down-payment">الدفعة: 500 ريال</p>
+      <p class="fees">الرسوم: 450 ريال</p>
+      <p class="net">الصافي: 1050 ريال</p>
+      <button onclick="selectPlan(this)">اختيار</button>
     </div>
 
-    <h2>طلب بطاقات سوا</h2>
-
-    <div class="input-group">
-      <input type="text" id="firstName" placeholder="الاسم الأول">
-      <input type="text" id="secondName" placeholder="الاسم الثاني">
-      <input type="text" id="thirdName" placeholder="الاسم الثالث">
+    <div class="card" data-plan="الشريحة الثالثة" data-amount="1500" data-net="800">
+      <h3>الشريحة الثالثة ⭐</h3>
+      <p>القيمة: 1500 ريال</p>
+      <p class="down-payment">الدفعة: 375 ريال</p>
+      <p class="fees">الرسوم: 325 ريال</p>
+      <p class="net">الصافي: 800 ريال</p>
+      <button onclick="selectPlan(this)">اختيار</button>
     </div>
-
-    <input type="text" id="phone" placeholder="رقم الجوال">
-    <div class="note">اكتب بدون 0 (مثال: 5XXXXXXXX)</div>
-
-    <select id="packageSelect">
-      <option value="">اختر الشريحة</option>
-      <option value="1">الشريحة 1 - 500 ريال</option>
-      <option value="2">الشريحة 2 - 1000 ريال</option>
-      <option value="3">الشريحة 3 - 1500 ريال</option>
-      <option value="4">الشريحة 4 - 1880 ريال</option>
-      <option value="5">الشريحة 5 - 2000 ريال</option>
-      <option value="6">الشريحة 6 - 2500 ريال</option>
-    </select>
-
-    <div id="result" class="result"></div>
-
-    <button class="confirm" onclick="confirmOrder()">تأكيد الطلب</button>
-    <button class="cancel" onclick="cancelOrder()">إلغاء</button>
 
   </div>
+
+  <!-- أزرار -->
+  <div class="actions">
+    <button class="confirm" onclick="confirmOrder()">تأكيد الطلب</button>
+    <button class="cancel" onclick="resetForm()">إلغاء</button>
+  </div>
+
 </div>
+
+<!-- مودال -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <p id="modalText"></p>
+    <div id="loader" class="loader"></div>
+    <button onclick="closeModal()">إغلاق</button>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+</body>
+</html>
