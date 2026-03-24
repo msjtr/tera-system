@@ -1,7 +1,6 @@
 let mode = "";
 let currentPage = 0;
 let selectedPlan = null;
-let autoSlide;
 
 const data = [
 {title:"الشريحة الأولى", total:500, down:125, fees:125},
@@ -43,7 +42,7 @@ slide += `
 <div class="plan" onclick="selectPlan(${realIndex})" id="plan-${realIndex}">
 <h3>${item.title}</h3>
 <p>القيمة: ${item.total} ريال</p>
-${mode==="no"? `<p>الدفعة: ${item.down}</p>`:""}
+${mode==="no"? `<p>الدفعة: ${item.down} ريال</p>`:""}
 <p>الرسوم: ${item.fees} ريال</p>
 <strong>الصافي: ${net} ريال</strong>
 </div>
@@ -56,16 +55,14 @@ pages.push(slide);
 }
 
 slider.innerHTML = pages.join("");
-updateSlider(true);
+updateSlider();
 renderProgress();
-initAdvancedSwipe();
-startAutoSlide();
+initSwipe();
 }
 
-function updateSlider(smooth=true){
-let slider = document.getElementById("slider");
-slider.style.transition = smooth ? "transform 0.4s ease" : "none";
-slider.style.transform = `translateX(-${currentPage * 100}%)`;
+function updateSlider(){
+document.getElementById("slider").style.transform =
+`translateX(${currentPage * -100}%)`;
 }
 
 function renderProgress(){
@@ -89,8 +86,6 @@ if(currentPage < max){
 currentPage++;
 updateSlider();
 renderProgress();
-}else{
-bounce();
 }
 }
 
@@ -99,24 +94,10 @@ if(currentPage > 0){
 currentPage--;
 updateSlider();
 renderProgress();
-}else{
-bounce();
 }
 }
 
-// Bounce Effect
-function bounce(){
-let slider = document.getElementById("slider");
-slider.style.transition = "transform 0.2s";
-slider.style.transform = `translateX(-${currentPage*100 + (mode==="rtl"?-2:2)}%)`;
-
-setTimeout(()=>{
-updateSlider();
-},200);
-}
-
-// Advanced Swipe
-function initAdvancedSwipe(){
+function initSwipe(){
 
 let slider = document.getElementById("slider");
 let startX = 0;
@@ -126,15 +107,14 @@ let isDragging = false;
 slider.onmousedown = e=>{
 isDragging = true;
 startX = e.clientX;
-stopAutoSlide();
 };
 
 slider.onmousemove = e=>{
 if(!isDragging) return;
 currentX = e.clientX - startX;
-slider.style.transition = "none";
+
 slider.style.transform =
-`translateX(calc(-${currentPage*100}% + ${currentX}px))`;
+`translateX(calc(${currentPage * -100}% + ${currentX}px))`;
 };
 
 slider.onmouseup = ()=>{
@@ -151,14 +131,13 @@ isDragging = false;
 
 slider.ontouchstart = e=>{
 startX = e.touches[0].clientX;
-stopAutoSlide();
 };
 
 slider.ontouchmove = e=>{
 currentX = e.touches[0].clientX - startX;
-slider.style.transition = "none";
+
 slider.style.transform =
-`translateX(calc(-${currentPage*100}% + ${currentX}px))`;
+`translateX(calc(${currentPage * -100}% + ${currentX}px))`;
 };
 
 slider.ontouchend = ()=>{
@@ -172,18 +151,6 @@ else if(distance > 50) prev();
 else updateSlider();
 }
 
-// Auto Slide
-function startAutoSlide(){
-autoSlide = setInterval(()=>{
-next();
-},4000);
-}
-
-function stopAutoSlide(){
-clearInterval(autoSlide);
-}
-
-// Confirm
 function confirmOrder(){
 
 let fname = document.getElementById("fname").value;
