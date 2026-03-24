@@ -1,5 +1,6 @@
 let mode = "";
 let selectedPlan = null;
+let currentPage = 0;
 
 const data = [
 {title:"الشريحة الأولى", total:500, down:125, fees:125},
@@ -10,97 +11,102 @@ const data = [
 {title:"الشريحة السادسة", total:2500, down:625, fees:575}
 ];
 
+const perPage = 2;
+
 function setMode(m,e){
-mode = m;
-document.querySelectorAll(".question button").forEach(b=>b.classList.remove("active"));
-e.target.classList.add("active");
-renderPlans();
+    mode = m;
+
+    document.querySelectorAll(".question button").forEach(b=>b.classList.remove("active"));
+    e.target.classList.add("active");
+
+    currentPage = 0;
+    renderPlans();
 }
 
 function renderPlans(){
 
-let html = "";
+    let start = currentPage * perPage;
+    let end = start + perPage;
+    let items = data.slice(start, end);
 
-data.forEach((item,index)=>{
+    let html = "";
 
-let net = mode==="yes"
-? item.total - item.down - item.fees
-: item.total - item.fees;
+    items.forEach((item,index)=>{
 
-let badge = index === 2 ? `<div class="badge">⭐ الأكثر طلباً</div>` : "";
+        let realIndex = start + index;
 
-html += `
-<div class="plan" onclick="selectPlan(${index})" id="plan-${index}">
-${badge}
-<h3>${item.title}</h3>
-<p>القيمة: ${item.total} ريال</p>
-${mode==="yes"? `<p>الدفعة: ${item.down}</p>`:""}
-<p>الرسوم: ${item.fees}</p>
-<strong>الصافي: ${net} ريال</strong>
-</div>
-`;
-});
+        let net = mode==="yes"
+        ? item.total - item.fees
+        : item.total - item.down - item.fees;
 
-document.getElementById("plans").innerHTML = html;
+        html += `
+        <div class="plan" onclick="selectPlan(${realIndex})" id="plan-${realIndex}">
+            <h3>${item.title}</h3>
+            <p>القيمة: ${item.total} ريال</p>
+
+            ${mode==="no" ? `<p>الدفعة: ${item.down} ريال</p>` : ""}
+
+            <p>الرسوم: ${item.fees} ريال</p>
+            <strong>الصافي: ${net} ريال</strong>
+        </div>
+        `;
+    });
+
+    document.getElementById("plans").innerHTML = html;
+    renderPagination();
 }
 
 function selectPlan(i){
-selectedPlan = data[i];
-document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
-document.getElementById("plan-"+i).classList.add("active");
+    selectedPlan = data[i];
+    document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
+    document.getElementById("plan-"+i).classList.add("active");
 }
 
-function confirmOrder(){
+function renderPagination(){
 
-let fname = document.getElementById("fname").value;
-let mname = document.getElementById("mname").value;
-let lname = document.getElementById("lname").value;
-let phone = document.getElementById("phone").value;
+    let totalPages = Math.ceil(data.length / perPage);
 
-if(!fname || !lname || !phone || !selectedPlan || !mode){
-alert("يرجى تعبئة البيانات واختيار الشريحة");
-return;
+    let html = `
+    <div class="pagination">
+
+        <button onclick="goTo(0)">⏮</button>
+        <button onclick="prev()">◀</button>
+
+        <div class="dots">
+    `;
+
+    for(let i=0;i<totalPages;i++){
+        html += `<span class="${i===currentPage?'active-dot':''}" onclick="goTo(${i})"></span>`;
+    }
+
+    html += `
+        </div>
+
+        <button onclick="next()">▶</button>
+        <button onclick="goTo(${totalPages-1})">⏭</button>
+
+    </div>
+    `;
+
+    document.getElementById("plans").innerHTML += html;
 }
 
-if(!phone.startsWith("5") || phone.length !== 9){
-alert("رقم الجوال غير صحيح");
-return;
+function next(){
+    let max = Math.ceil(data.length / perPage) -1;
+    if(currentPage < max){
+        currentPage++;
+        renderPlans();
+    }
 }
 
-document.getElementById("modal").classList.remove("hidden");
-document.getElementById("status").innerText = "جاري التحويل...";
-
-let net = mode==="yes"
-? selectedPlan.total - selectedPlan.down - selectedPlan.fees
-: selectedPlan.total - selectedPlan.fees;
-
-let msg = `
-طلب جديد - منصة تيرا
-
-الاسم: ${fname} ${mname} ${lname}
-الجوال: ${phone}
-
-${selectedPlan.title}
-القيمة: ${selectedPlan.total}
-الصافي: ${net} ريال
-
-الدفع: ${mode==="yes"?"دفعة أولى":"دفع كامل"}
-`;
-
-let url = "https://wa.me/966555698774?text="+encodeURIComponent(msg);
-
-setTimeout(()=>{
-window.open(url);
-closeModal();
-},1500);
-
+function prev(){
+    if(currentPage > 0){
+        currentPage--;
+        renderPlans();
+    }
 }
 
-function resetAll(){
-location.reload();
-}
-
-function closeModal(){
-document.getElementById("modal").classList.add("hidden");
-location.reload();
+function goTo(i){
+    currentPage = i;
+    renderPlans();
 }
