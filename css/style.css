@@ -1,78 +1,103 @@
 body {
-  font-family: sans-serif;
-  background: linear-gradient(135deg,#1e1e2f,#3a0ca3);
-  color: white;
+  font-family: 'Tajawal', sans-serif;
+  background: linear-gradient(135deg,#0f172a,#1e293b);
+  color: #fff;
+  margin: 0;
   text-align: center;
 }
 
+.logo {
+  width: 80px;
+  margin-top: 20px;
+}
+
 .container {
-  max-width: 900px;
+  max-width: 1000px;
   margin: auto;
+}
+
+.form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
 }
 
 input {
   padding: 10px;
-  margin: 5px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
 }
 
 .cards {
   display: flex;
-  gap: 20px;
   justify-content: center;
+  gap: 20px;
+  margin-top: 30px;
   flex-wrap: wrap;
 }
 
 .card {
-  background: #fff;
-  color: #000;
+  background: rgba(255,255,255,0.08);
   padding: 20px;
-  border-radius: 15px;
+  border-radius: 20px;
   width: 250px;
   transition: 0.3s;
 }
 
-.card:hover {
-  transform: scale(1.05);
+.card.selected {
+  border: 2px solid #22c55e;
+}
+
+.net {
+  color: #22c55e;
+  font-weight: bold;
 }
 
 button {
   padding: 10px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
 }
 
-.confirm { background: green; color: white; }
-.cancel { background: red; color: white; }
+.confirm {
+  background: green;
+  color: white;
+}
 
-.hidden { display: none; }
+.cancel {
+  background: red;
+  color: white;
+}
+
+.hidden {
+  display: none;
+}
 
 .modal {
   display: none;
   position: fixed;
-  background: rgba(0,0,0,0.7);
-  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.8);
+  top:0;left:0;right:0;bottom:0;
+  justify-content: center;
+  align-items: center;
 }
 
 .modal-content {
-  background: white;
-  color: black;
-  margin: 15% auto;
+  background: #111;
   padding: 20px;
-  width: 300px;
   border-radius: 10px;
 }
 
 .loader {
-  border: 5px solid #eee;
-  border-top: 5px solid purple;
+  border: 5px solid #333;
+  border-top: 5px solid green;
   border-radius: 50%;
   width: 40px;
   height: 40px;
+  margin: 10px auto;
   animation: spin 1s linear infinite;
-  margin: auto;
 }
 
 @keyframes spin {
