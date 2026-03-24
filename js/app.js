@@ -1,60 +1,68 @@
 let selectedPlan = null;
 
-// اختيار باقة
-function selectPlan(btn) {
-  const card = btn.parentElement;
-  selectedPlan = {
-    name: card.dataset.plan,
-    amount: card.dataset.amount,
-    net: card.dataset.net
+document.addEventListener("DOMContentLoaded", () => {
+
+  window.selectPlan = function(btn) {
+    document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+
+    const card = btn.parentElement;
+    card.classList.add('selected');
+
+    selectedPlan = {
+      name: card.dataset.plan,
+      amount: card.dataset.amount,
+      net: card.dataset.net
+    };
+
+    btn.innerText = "تم الاختيار ✓";
   };
 
-  alert("تم اختيار " + selectedPlan.name);
-}
+  // التحكم في الدفعة
+  document.querySelectorAll('input[name="payment"]').forEach(radio => {
+    radio.addEventListener('change', e => {
+      const value = e.target.value;
 
-// تغيير الدفعة
-document.querySelectorAll('input[name="payment"]').forEach(radio => {
-  radio.addEventListener('change', e => {
-    const value = e.target.value;
-
-    document.querySelectorAll('.down-payment, .fees').forEach(el => {
-      if (value === "yes") {
-        el.classList.add('hidden');
-      } else {
-        el.classList.remove('hidden');
-      }
+      document.querySelectorAll('.down-payment').forEach(el => {
+        if (value === "yes") {
+          el.classList.add('hidden'); // نخفي الدفعة فقط
+        } else {
+          el.classList.remove('hidden');
+        }
+      });
     });
   });
-});
 
-// تأكيد الطلب
-function confirmOrder() {
-  if (!selectedPlan) return alert("اختر باقة");
+  window.confirmOrder = function() {
 
-  const name = document.getElementById("firstName").value;
-  const mobile = document.getElementById("mobile").value;
+    if (!selectedPlan) {
+      alert("اختر باقة");
+      return;
+    }
 
-  const modal = document.getElementById("modal");
-  const text = document.getElementById("modalText");
-  const loader = document.getElementById("loader");
+    const name = document.getElementById("firstName").value;
+    const mobile = document.getElementById("mobile").value;
 
-  modal.style.display = "block";
-  loader.style.display = "block";
-  text.innerText = "جاري إرسال الطلب...";
+    if (!name || !mobile) {
+      alert("أكمل البيانات");
+      return;
+    }
 
-  setTimeout(() => {
-    loader.style.display = "none";
-    text.innerText = "تم إرسال الطلب بنجاح";
+    const modal = document.getElementById("modal");
+    const text = document.getElementById("modalText");
+    const loader = document.getElementById("loader");
 
-    sendWhatsApp(name, mobile);
-  }, 2000);
-}
+    modal.style.display = "flex";
+    loader.style.display = "block";
+    text.innerText = "جاري إرسال الطلب...";
 
-// واتساب
-function sendWhatsApp(name, mobile) {
-  const phone = "966555698774";
+    setTimeout(() => {
+      loader.style.display = "none";
+      text.innerText = "تم إرسال الطلب بنجاح ✅";
 
-  const msg = `طلب جديد منصة تيرا
+      const phone = "966555698774";
+
+      const msg = `طلب جديد - منصة تيرا
+
 الاسم: ${name}
 الجوال: ${mobile}
 
@@ -62,17 +70,17 @@ function sendWhatsApp(name, mobile) {
 القيمة: ${selectedPlan.amount}
 الصافي: ${selectedPlan.net}`;
 
-  const url = `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
-  window.open(url);
-}
+      window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`);
+    }, 2000);
+  };
 
-// اغلاق
-function closeModal() {
-  document.getElementById("modal").style.display = "none";
-  resetForm();
-}
+  window.closeModal = function() {
+    document.getElementById("modal").style.display = "none";
+    location.reload();
+  };
 
-// إعادة
-function resetForm() {
-  location.reload();
-}
+  window.resetForm = function() {
+    location.reload();
+  };
+
+});
