@@ -68,8 +68,8 @@ swipeInitialized = true;
 }
 
 function updateSlider(smooth=true){
-let slider = document.getElementById("slider");
-slider.style.transition = smooth ? "transform 0.4s ease" : "none";
+let container = document.querySelector(".slider-container");
+let slider = document.getElementById("slider");slider.style.transition = smooth ? "transform 0.4s ease" : "none";
 slider.style.transform = `translateX(${currentPage * -100}%)`;
 }
 
@@ -109,17 +109,21 @@ renderProgress();
 /* ===== SWIPE FIXED ===== */
 function initSwipe(){
 
+let container = document.querySelector(".slider-container");
 let slider = document.getElementById("slider");
+
 let startX = 0;
 let currentX = 0;
 let isDragging = false;
 
+/* START */
 function start(e){
 isDragging = true;
 startX = e.touches ? e.touches[0].clientX : e.clientX;
 slider.style.transition = "none";
 }
 
+/* MOVE */
 function move(e){
 if(!isDragging) return;
 
@@ -129,26 +133,28 @@ slider.style.transform =
 `translateX(calc(${currentPage * -100}% + ${currentX}px))`;
 }
 
+/* END */
 function end(){
 if(!isDragging) return;
 
-if(currentX < -50) next();
-else if(currentX > 50) prev();
+if(currentX < -60) next();
+else if(currentX > 60) prev();
 else updateSlider();
 
 isDragging = false;
 currentX = 0;
 }
 
-/* touch */
-slider.addEventListener("touchstart", start);
-slider.addEventListener("touchmove", move);
-slider.addEventListener("touchend", end);
+/* 👇 المهم: الربط على الكونتينر */
+container.addEventListener("mousedown", start);
+container.addEventListener("touchstart", start);
 
-/* mouse */
-slider.addEventListener("mousedown", start);
-document.addEventListener("mousemove", move);
-document.addEventListener("mouseup", end);
+container.addEventListener("mousemove", move);
+container.addEventListener("touchmove", move);
+
+container.addEventListener("mouseup", end);
+container.addEventListener("mouseleave", end);
+container.addEventListener("touchend", end);
 }
 
 function confirmOrder(){
