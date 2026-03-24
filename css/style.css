@@ -1,60 +1,151 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<title>منصة تيرا</title>
-<link rel="stylesheet" href="css/style.css">
-<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
-</head>
+body {
+font-family: 'Tajawal', sans-serif;
+background: radial-gradient(circle at top,#020617,#020617 60%,#020617);
+color: white;
+}
 
-<body>
+.container {
+max-width: 650px;
+margin: auto;
+padding: 20px;
+}
 
-<div class="container">
+.logo {
+width: 90px;
+display: block;
+margin: auto;
+}
 
-<img src="assets/logo.svg" class="logo">
+h1 {
+text-align: center;
+}
 
-<h1>مرحباً بكم في منصة تيرا</h1>
-<p class="subtitle">عالم بلا حدود</p>
+.subtitle {
+text-align: center;
+color: #94a3b8;
+margin-bottom: 20px;
+}
 
-<div class="card">
+.card {
+background: rgba(30,41,59,0.6);
+backdrop-filter: blur(12px);
+padding: 20px;
+border-radius: 18px;
+}
 
-<h2>طلب شراء بطاقات سوا</h2>
+.row {
+display: flex;
+gap: 8px;
+}
 
-<div class="row">
-<input id="fname" placeholder="الاسم الأول">
-<input id="mname" placeholder="الاسم الثاني">
-<input id="lname" placeholder="اسم العائلة">
-</div>
+input {
+width: 100%;
+padding: 12px;
+margin: 6px 0;
+border-radius: 12px;
+border: none;
+background: #0f172a;
+color: white;
+}
 
-<input id="phone" placeholder="5XXXXXXXX" maxlength="9">
+.question {
+text-align: center;
+margin: 12px 0;
+}
 
-<div class="question">
-<p>هل لديكم دفعة أولى؟</p>
-<button onclick="setMode('yes',event)">نعم</button>
-<button onclick="setMode('no',event)">لا</button>
-</div>
+.question button {
+background: #1e293b;
+color: #94a3b8;
+}
 
-<div id="plans"></div>
+.question button.active {
+background: linear-gradient(90deg,#22c55e,#16a34a);
+color: white;
+}
 
-<div class="actions">
-<button class="confirm" onclick="confirmOrder()">تأكيد الطلب</button>
-<button class="cancel" onclick="resetAll()">إلغاء الطلب</button>
-</div>
+#plans {
+display: grid;
+grid-template-columns: 1fr 1fr;
+gap: 12px;
+}
 
-</div>
-</div>
+.plan {
+background: linear-gradient(145deg,#1e293b,#0f172a);
+padding: 15px;
+border-radius: 16px;
+cursor: pointer;
+transition: 0.4s;
+position: relative;
+}
 
-<!-- Modal -->
-<div id="modal" class="modal hidden">
-<div class="modal-content">
-<p>جاري إرسال الطلب...</p>
-<div class="loader"></div>
-<p id="status"></p>
-<button onclick="closeModal()">إغلاق</button>
-</div>
-</div>
+.plan:hover {
+transform: translateY(-5px);
+}
 
-<script src="js/app.js"></script>
+.plan.active {
+border: 1px solid #22c55e;
+}
 
-</body>
-</html>
+.plan strong {
+color: #22c55e;
+}
+
+.badge {
+position: absolute;
+top: 8px;
+left: 8px;
+background: #22c55e;
+color: black;
+padding: 3px 8px;
+border-radius: 6px;
+font-size: 12px;
+}
+
+.actions {
+display: flex;
+gap: 10px;
+margin-top: 15px;
+}
+
+.confirm {
+flex:1;
+background: linear-gradient(90deg,#22c55e,#16a34a);
+}
+
+.cancel {
+flex:1;
+background: #ef4444;
+}
+
+.modal {
+position: fixed;
+top:0;left:0;
+width:100%;height:100%;
+background: rgba(0,0,0,0.8);
+display:flex;
+justify-content:center;
+align-items:center;
+}
+
+.hidden {display:none;}
+
+.modal-content {
+background:#1e293b;
+padding:25px;
+border-radius:16px;
+text-align:center;
+}
+
+.loader {
+border: 5px solid #333;
+border-top: 5px solid #22c55e;
+border-radius: 50%;
+width: 50px;
+height: 50px;
+animation: spin 1s linear infinite;
+margin:auto;
+}
+
+@keyframes spin {
+100% {transform: rotate(360deg);}
+}
