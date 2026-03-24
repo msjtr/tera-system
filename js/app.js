@@ -1,6 +1,7 @@
 let mode = "";
-let selectedPlan = null;
 let currentPage = 0;
+let selectedPlan = null;
+let autoSlide;
 
 const data = [
 {title:"الشريحة الأولى", total:500, down:125, fees:125},
@@ -11,102 +12,204 @@ const data = [
 {title:"الشريحة السادسة", total:2500, down:625, fees:575}
 ];
 
-const perPage = 2;
-
 function setMode(m,e){
-    mode = m;
-
-    document.querySelectorAll(".question button").forEach(b=>b.classList.remove("active"));
-    e.target.classList.add("active");
-
-    currentPage = 0;
-    renderPlans();
+mode = m;
+document.querySelectorAll(".question button").forEach(b=>b.classList.remove("active"));
+e.target.classList.add("active");
+currentPage = 0;
+renderSlider();
 }
 
-function renderPlans(){
+function renderSlider(){
 
-    let start = currentPage * perPage;
-    let end = start + perPage;
-    let items = data.slice(start, end);
+let slider = document.getElementById("slider");
+let pages = [];
 
-    let html = "";
+for(let i=0;i<data.length;i+=2){
 
-    items.forEach((item,index)=>{
+let items = data.slice(i,i+2);
 
-        let realIndex = start + index;
+let slide = `<div class="slide">`;
 
-        let net = mode==="yes"
-        ? item.total - item.fees
-        : item.total - item.down - item.fees;
+items.forEach((item,index)=>{
 
-        html += `
-        <div class="plan" onclick="selectPlan(${realIndex})" id="plan-${realIndex}">
-            <h3>${item.title}</h3>
-            <p>القيمة: ${item.total} ريال</p>
+let realIndex = i+index;
 
-            ${mode==="no" ? `<p>الدفعة: ${item.down} ريال</p>` : ""}
+let net = mode==="yes"
+? item.total - item.fees
+: item.total - item.down - item.fees;
 
-            <p>الرسوم: ${item.fees} ريال</p>
-            <strong>الصافي: ${net} ريال</strong>
-        </div>
-        `;
-    });
+slide += `
+<div class="plan" onclick="selectPlan(${realIndex})" id="plan-${realIndex}">
+<h3>${item.title}</h3>
+<p>القيمة: ${item.total} ريال</p>
+${mode==="no"? `<p>الدفعة: ${item.down}</p>`:""}
+<p>الرسوم: ${item.fees} ريال</p>
+<strong>الصافي: ${net} ريال</strong>
+</div>
+`;
 
-    document.getElementById("plans").innerHTML = html;
-    renderPagination();
+});
+
+slide += `</div>`;
+pages.push(slide);
+}
+
+slider.innerHTML = pages.join("");
+updateSlider(true);
+renderProgress();
+initAdvancedSwipe();
+startAutoSlide();
+}
+
+function updateSlider(smooth=true){
+let slider = document.getElementById("slider");
+slider.style.transition = smooth ? "transform 0.4s ease" : "none";
+slider.style.transform = `translateX(-${currentPage * 100}%)`;
+}
+
+function renderProgress(){
+let total = Math.ceil(data.length/2);
+document.getElementById("pagination").innerHTML = `
+<div class="progress-bar">
+<div class="progress" style="width:${((currentPage+1)/total)*100}%"></div>
+</div>
+`;
 }
 
 function selectPlan(i){
-    selectedPlan = data[i];
-    document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
-    document.getElementById("plan-"+i).classList.add("active");
-}
-
-function renderPagination(){
-
-    let totalPages = Math.ceil(data.length / perPage);
-
-    let html = `
-    <div class="pagination">
-
-        <button onclick="goTo(0)">⏮</button>
-        <button onclick="prev()">◀</button>
-
-        <div class="dots">
-    `;
-
-    for(let i=0;i<totalPages;i++){
-        html += `<span class="${i===currentPage?'active-dot':''}" onclick="goTo(${i})"></span>`;
-    }
-
-    html += `
-        </div>
-
-        <button onclick="next()">▶</button>
-        <button onclick="goTo(${totalPages-1})">⏭</button>
-
-    </div>
-    `;
-
-    document.getElementById("plans").innerHTML += html;
+selectedPlan = data[i];
+document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
+document.getElementById("plan-"+i).classList.add("active");
 }
 
 function next(){
-    let max = Math.ceil(data.length / perPage) -1;
-    if(currentPage < max){
-        currentPage++;
-        renderPlans();
-    }
+let max = Math.ceil(data.length/2)-1;
+if(currentPage < max){
+currentPage++;
+updateSlider();
+renderProgress();
+}else{
+bounce();
+}
 }
 
 function prev(){
-    if(currentPage > 0){
-        currentPage--;
-        renderPlans();
-    }
+if(currentPage > 0){
+currentPage--;
+updateSlider();
+renderProgress();
+}else{
+bounce();
+}
 }
 
-function goTo(i){
-    currentPage = i;
-    renderPlans();
+// Bounce Effect
+function bounce(){
+let slider = document.getElementById("slider");
+slider.style.transition = "transform 0.2s";
+slider.style.transform = `translateX(-${currentPage*100 + (mode==="rtl"?-2:2)}%)`;
+
+setTimeout(()=>{
+updateSlider();
+},200);
+}
+
+// Advanced Swipe
+function initAdvancedSwipe(){
+
+let slider = document.getElementById("slider");
+let startX = 0;
+let currentX = 0;
+let isDragging = false;
+
+slider.onmousedown = e=>{
+isDragging = true;
+startX = e.clientX;
+stopAutoSlide();
+};
+
+slider.onmousemove = e=>{
+if(!isDragging) return;
+currentX = e.clientX - startX;
+slider.style.transition = "none";
+slider.style.transform =
+`translateX(calc(-${currentPage*100}% + ${currentX}px))`;
+};
+
+slider.onmouseup = ()=>{
+handleSwipe(currentX);
+isDragging = false;
+};
+
+slider.onmouseleave = ()=>{
+if(isDragging){
+handleSwipe(currentX);
+isDragging = false;
+}
+};
+
+slider.ontouchstart = e=>{
+startX = e.touches[0].clientX;
+stopAutoSlide();
+};
+
+slider.ontouchmove = e=>{
+currentX = e.touches[0].clientX - startX;
+slider.style.transition = "none";
+slider.style.transform =
+`translateX(calc(-${currentPage*100}% + ${currentX}px))`;
+};
+
+slider.ontouchend = ()=>{
+handleSwipe(currentX);
+};
+}
+
+function handleSwipe(distance){
+if(distance < -50) next();
+else if(distance > 50) prev();
+else updateSlider();
+}
+
+// Auto Slide
+function startAutoSlide(){
+autoSlide = setInterval(()=>{
+next();
+},4000);
+}
+
+function stopAutoSlide(){
+clearInterval(autoSlide);
+}
+
+// Confirm
+function confirmOrder(){
+
+let fname = document.getElementById("fname").value;
+let lname = document.getElementById("lname").value;
+let phone = document.getElementById("phone").value;
+
+if(!fname || !lname || !phone || !selectedPlan || !mode){
+alert("أكمل البيانات");
+return;
+}
+
+let net = mode==="yes"
+? selectedPlan.total - selectedPlan.fees
+: selectedPlan.total - selectedPlan.down - selectedPlan.fees;
+
+let msg = `
+طلب منصة تيرا
+
+${selectedPlan.title}
+القيمة: ${selectedPlan.total}
+الصافي: ${net}
+`;
+
+window.open("https://wa.me/966555698774?text="+encodeURIComponent(msg));
+}
+
+function resetAll(){
+location.reload();
 }
