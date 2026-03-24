@@ -1,6 +1,7 @@
 let mode = "";
 let currentPage = 0;
 let selectedPlan = null;
+let swipeInitialized = false;
 
 const data = [
 {title:"الشريحة الأولى", total:500, down:125, fees:125},
@@ -13,8 +14,10 @@ const data = [
 
 function setMode(m,e){
 mode = m;
+
 document.querySelectorAll(".question button").forEach(b=>b.classList.remove("active"));
 e.target.classList.add("active");
+
 currentPage = 0;
 renderSlider();
 }
@@ -47,7 +50,6 @@ ${mode==="no"? `<p>الدفعة: ${item.down} ريال</p>`:""}
 <strong>الصافي: ${net} ريال</strong>
 </div>
 `;
-
 });
 
 slide += `</div>`;
@@ -55,18 +57,25 @@ pages.push(slide);
 }
 
 slider.innerHTML = pages.join("");
-updateSlider();
+
+updateSlider(true);
 renderProgress();
+
+if(!swipeInitialized){
 initSwipe();
+swipeInitialized = true;
+}
 }
 
-function updateSlider(){
-document.getElementById("slider").style.transform =
-`translateX(${currentPage * -100}%)`;
+function updateSlider(smooth=true){
+let slider = document.getElementById("slider");
+slider.style.transition = smooth ? "transform 0.4s ease" : "none";
+slider.style.transform = `translateX(${currentPage * -100}%)`;
 }
 
 function renderProgress(){
 let total = Math.ceil(data.length/2);
+
 document.getElementById("pagination").innerHTML = `
 <div class="progress-bar">
 <div class="progress" style="width:${((currentPage+1)/total)*100}%"></div>
@@ -97,6 +106,7 @@ renderProgress();
 }
 }
 
+/* ===== SWIPE FIXED ===== */
 function initSwipe(){
 
 let slider = document.getElementById("slider");
@@ -104,51 +114,41 @@ let startX = 0;
 let currentX = 0;
 let isDragging = false;
 
-slider.onmousedown = e=>{
+function start(e){
 isDragging = true;
-startX = e.clientX;
-};
+startX = e.touches ? e.touches[0].clientX : e.clientX;
+slider.style.transition = "none";
+}
 
-slider.onmousemove = e=>{
+function move(e){
 if(!isDragging) return;
-currentX = e.clientX - startX;
+
+currentX = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
 
 slider.style.transform =
 `translateX(calc(${currentPage * -100}% + ${currentX}px))`;
-};
-
-slider.onmouseup = ()=>{
-handleSwipe(currentX);
-isDragging = false;
-};
-
-slider.onmouseleave = ()=>{
-if(isDragging){
-handleSwipe(currentX);
-isDragging = false;
-}
-};
-
-slider.ontouchstart = e=>{
-startX = e.touches[0].clientX;
-};
-
-slider.ontouchmove = e=>{
-currentX = e.touches[0].clientX - startX;
-
-slider.style.transform =
-`translateX(calc(${currentPage * -100}% + ${currentX}px))`;
-};
-
-slider.ontouchend = ()=>{
-handleSwipe(currentX);
-};
 }
 
-function handleSwipe(distance){
-if(distance < -50) next();
-else if(distance > 50) prev();
+function end(){
+if(!isDragging) return;
+
+if(currentX < -50) next();
+else if(currentX > 50) prev();
 else updateSlider();
+
+isDragging = false;
+currentX = 0;
+}
+
+/* touch */
+slider.addEventListener("touchstart", start);
+slider.addEventListener("touchmove", move);
+slider.addEventListener("touchend", end);
+
+/* mouse */
+slider.addEventListener("mousedown", start);
+document.addEventListener("mousemove", move);
+document.addEventListener("mouseup", end);
 }
 
 function confirmOrder(){
