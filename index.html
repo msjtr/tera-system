@@ -3,35 +3,42 @@
 <head>
 <meta charset="UTF-8">
 <title>منصة تيرا</title>
-<link rel="stylesheet" href="css/style.css">
-</head>
 
+<link rel="stylesheet" href="css/style.css">
+
+</head>
 <body>
 
 <div class="container">
+
+  <!-- الشعار -->
+  <img src="assets/logo.svg" class="logo">
 
   <h1>منصة تيرا</h1>
   <p>عالم بلا حدود</p>
 
   <!-- النموذج -->
   <div class="form">
-    <input type="text" id="firstName" placeholder="الاسم الأول">
-    <input type="text" id="secondName" placeholder="الاسم الثاني">
-    <input type="text" id="lastName" placeholder="اسم العائلة">
-    <input type="text" id="mobile" placeholder="5XXXXXXXX">
+    <input id="firstName" placeholder="الاسم الأول">
+    <input id="secondName" placeholder="الاسم الثاني">
+    <input id="lastName" placeholder="اسم العائلة">
+    <input id="mobile" placeholder="5XXXXXXXX">
+  </div>
 
-    <!-- هل لديه دفعة -->
-    <div class="payment-option">
-      <label><input type="radio" name="payment" value="yes"> نعم</label>
-      <label><input type="radio" name="payment" value="no" checked> لا</label>
-    </div>
+  <!-- سؤال -->
+  <div class="payment-option">
+    <p>هل لديكم دفعة أولى؟</p>
+
+    <label><input type="radio" name="payment" value="yes"> نعم</label>
+    <label><input type="radio" name="payment" value="no" checked> لا</label>
   </div>
 
   <!-- الباقات -->
   <div class="cards">
 
+    <!-- الشريحة الخامسة -->
     <div class="card" data-plan="الشريحة الخامسة" data-amount="2000" data-net="1050">
-      <h3>الشريحة الخامسة 🔥</h3>
+      <h3>🔥 الشريحة الخامسة</h3>
       <p>القيمة: 2000 ريال</p>
       <p class="down-payment">الدفعة: 500 ريال</p>
       <p class="fees">الرسوم: 450 ريال</p>
@@ -39,8 +46,9 @@
       <button onclick="selectPlan(this)">اختيار</button>
     </div>
 
+    <!-- الشريحة الثالثة -->
     <div class="card" data-plan="الشريحة الثالثة" data-amount="1500" data-net="800">
-      <h3>الشريحة الثالثة ⭐</h3>
+      <h3>⭐ الشريحة الثالثة</h3>
       <p>القيمة: 1500 ريال</p>
       <p class="down-payment">الدفعة: 375 ريال</p>
       <p class="fees">الرسوم: 325 ريال</p>
@@ -50,7 +58,7 @@
 
   </div>
 
-  <!-- أزرار -->
+  <!-- الأزرار -->
   <div class="actions">
     <button class="confirm" onclick="confirmOrder()">تأكيد الطلب</button>
     <button class="cancel" onclick="resetForm()">إلغاء</button>
@@ -68,5 +76,6 @@
 </div>
 
 <script src="js/app.js"></script>
+
 </body>
 </html>
