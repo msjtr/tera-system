@@ -12,6 +12,7 @@ const data = [
 {title:"الشريحة السادسة", total:2500, down:625, fees:575}
 ];
 
+/* ===== MODE ===== */
 function setMode(m,e){
 mode = m;
 
@@ -22,6 +23,7 @@ currentPage = 0;
 renderSlider();
 }
 
+/* ===== RENDER ===== */
 function renderSlider(){
 
 let slider = document.getElementById("slider");
@@ -65,16 +67,20 @@ if(!swipeInitialized){
 initSwipe();
 swipeInitialized = true;
 }
-function updateSlider(smooth = true){
-
-    let slider = document.getElementById("slider");
-
-    slider.style.transition = smooth ? "transform 0.4s ease" : "none";
-
-    slider.style.transform = `translateX(${currentPage * -100}%)`;
 }
 
+/* ===== SLIDER MOVE ===== */
+function updateSlider(smooth = true){
+
+let slider = document.getElementById("slider");
+
+slider.style.transition = smooth ? "transform 0.4s ease" : "none";
+slider.style.transform = `translateX(${currentPage * -100}%)`;
+}
+
+/* ===== PROGRESS ===== */
 function renderProgress(){
+
 let total = Math.ceil(data.length/2);
 
 document.getElementById("pagination").innerHTML = `
@@ -84,14 +90,18 @@ document.getElementById("pagination").innerHTML = `
 `;
 }
 
+/* ===== SELECT ===== */
 function selectPlan(i){
 selectedPlan = data[i];
+
 document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
 document.getElementById("plan-"+i).classList.add("active");
 }
 
+/* ===== NAV ===== */
 function next(){
 let max = Math.ceil(data.length/2)-1;
+
 if(currentPage < max){
 currentPage++;
 updateSlider();
@@ -107,23 +117,22 @@ renderProgress();
 }
 }
 
-/* ===== SWIPE FIXED ===== */
+/* ===== SWIPE ===== */
 function initSwipe(){
 
 let container = document.querySelector(".slider-container");
 let slider = document.getElementById("slider");
+
 let startX = 0;
 let currentX = 0;
 let isDragging = false;
 
-/* START */
 function start(e){
 isDragging = true;
 startX = e.touches ? e.touches[0].clientX : e.clientX;
 slider.style.transition = "none";
 }
 
-/* MOVE */
 function move(e){
 if(!isDragging) return;
 
@@ -133,7 +142,6 @@ slider.style.transform =
 `translateX(calc(${currentPage * -100}% + ${currentX}px))`;
 }
 
-/* END */
 function end(){
 if(!isDragging) return;
 
@@ -145,7 +153,7 @@ isDragging = false;
 currentX = 0;
 }
 
-/* 👇 المهم: الربط على الكونتينر */
+/* EVENTS */
 container.addEventListener("mousedown", start);
 container.addEventListener("touchstart", start);
 
@@ -157,6 +165,7 @@ container.addEventListener("mouseleave", end);
 container.addEventListener("touchend", end);
 }
 
+/* ===== CONFIRM ===== */
 function confirmOrder(){
 
 let fname = document.getElementById("fname").value;
@@ -183,6 +192,13 @@ ${selectedPlan.title}
 window.open("https://wa.me/966555698774?text="+encodeURIComponent(msg));
 }
 
+/* ===== RESET ===== */
 function resetAll(){
 location.reload();
 }
+
+/* ===== AUTO START ===== */
+window.onload = () => {
+let btn = document.querySelector('.question button:last-child');
+setMode('no', {target: btn});
+};
