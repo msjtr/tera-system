@@ -2,48 +2,60 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Tahoma', sans-serif;
+  font-family: 'Cairo', sans-serif;
 }
 
 body {
   background: linear-gradient(135deg, #0f172a, #1e293b);
   color: #fff;
   min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
-  max-width: 400px;
-  margin: auto;
+  width: 100%;
+  max-width: 420px;
   padding: 20px;
 }
 
 .card {
   background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(12px);
   border-radius: 15px;
   padding: 20px;
-}
-
-.logo {
-  text-align: center;
-  margin-bottom: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
 }
 
 .logo img {
-  width: 80px;
+  width: 100px;
+  display: block;
+  margin: auto;
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin: 15px 0;
+}
+
+.input-group {
+  display: flex;
+  gap: 5px;
 }
 
 input, select {
   width: 100%;
   padding: 12px;
-  margin-bottom: 10px;
   border-radius: 8px;
   border: none;
+  margin-bottom: 10px;
+}
+
+.note {
+  font-size: 12px;
+  color: #ccc;
+  margin-bottom: 10px;
 }
 
 .result {
@@ -55,8 +67,8 @@ input, select {
 
 .net {
   color: #22c55e;
-  font-size: 18px;
   font-weight: bold;
+  font-size: 18px;
 }
 
 button {
@@ -66,22 +78,7 @@ button {
   border-radius: 8px;
   border: none;
   cursor: pointer;
-  font-size: 16px;
 }
 
-.whatsapp {
-  background: #25D366;
-  color: white;
-}
-
-.pdf {
-  background: #111;
-  color: white;
-}
-
-/* 📱 للجوال */
-@media (max-width: 600px) {
-  .container {
-    padding: 10px;
-  }
-}
+.confirm { background: #2563eb; color: #fff; }
+.cancel { background: #ef4444; color: #fff; }
