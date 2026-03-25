@@ -12,18 +12,18 @@ const data = [
 {title:"الشريحة السادسة", total:2500, down:625, fees:575}
 ];
 
-/* ===== MODE ===== */
-function setMode(m,e){
+/* MODE */
+function setMode(m, el){
 mode = m;
 
 document.querySelectorAll(".question button").forEach(b=>b.classList.remove("active"));
-e.target.classList.add("active");
+el.classList.add("active");
 
 currentPage = 0;
 renderSlider();
 }
 
-/* ===== RENDER ===== */
+/* RENDER */
 function renderSlider(){
 
 let slider = document.getElementById("slider");
@@ -32,7 +32,6 @@ let pages = [];
 for(let i=0;i<data.length;i+=2){
 
 let items = data.slice(i,i+2);
-
 let slide = `<div class="slide">`;
 
 items.forEach((item,index)=>{
@@ -46,10 +45,10 @@ let net = mode==="yes"
 slide += `
 <div class="plan" onclick="selectPlan(${realIndex})" id="plan-${realIndex}">
 <h3>${item.title}</h3>
-<p>القيمة: ${item.total} ريال</p>
-${mode==="no"? `<p>الدفعة: ${item.down} ريال</p>`:""}
-<p>الرسوم: ${item.fees} ريال</p>
-<strong>الصافي: ${net} ريال</strong>
+<p>${item.total} ريال</p>
+${mode==="no"? `<p>دفعة: ${item.down}</p>`:""}
+<p>رسوم: ${item.fees}</p>
+<strong>${net} ريال</strong>
 </div>
 `;
 });
@@ -59,8 +58,7 @@ pages.push(slide);
 }
 
 slider.innerHTML = pages.join("");
-
-updateSlider(true);
+updateSlider();
 renderProgress();
 
 if(!swipeInitialized){
@@ -69,40 +67,31 @@ swipeInitialized = true;
 }
 }
 
-/* ===== SLIDER MOVE ===== */
-function updateSlider(smooth = true){
-
-let slider = document.getElementById("slider");
-
-slider.style.transition = smooth ? "transform 0.4s ease" : "none";
-slider.style.transform = `translateX(${currentPage * -100}%)`;
+/* SLIDE MOVE */
+function updateSlider(){
+document.getElementById("slider").style.transform =
+`translateX(${currentPage * -100}%)`;
 }
 
-/* ===== PROGRESS ===== */
+/* PROGRESS */
 function renderProgress(){
-
 let total = Math.ceil(data.length/2);
-
 document.getElementById("pagination").innerHTML = `
 <div class="progress-bar">
 <div class="progress" style="width:${((currentPage+1)/total)*100}%"></div>
-</div>
-`;
+</div>`;
 }
 
-/* ===== SELECT ===== */
+/* SELECT */
 function selectPlan(i){
 selectedPlan = data[i];
-
 document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
 document.getElementById("plan-"+i).classList.add("active");
 }
 
-/* ===== NAV ===== */
+/* NAV */
 function next(){
-let max = Math.ceil(data.length/2)-1;
-
-if(currentPage < max){
+if(currentPage < Math.ceil(data.length/2)-1){
 currentPage++;
 updateSlider();
 renderProgress();
@@ -117,7 +106,7 @@ renderProgress();
 }
 }
 
-/* ===== SWIPE ===== */
+/* SWIPE */
 function initSwipe(){
 
 let container = document.querySelector(".slider-container");
@@ -127,6 +116,16 @@ let startX = 0;
 let currentX = 0;
 let isDragging = false;
 
+container.addEventListener("mousedown", start);
+container.addEventListener("touchstart", start);
+
+container.addEventListener("mousemove", move);
+container.addEventListener("touchmove", move);
+
+container.addEventListener("mouseup", end);
+container.addEventListener("mouseleave", end);
+container.addEventListener("touchend", end);
+
 function start(e){
 isDragging = true;
 startX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -135,9 +134,7 @@ slider.style.transition = "none";
 
 function move(e){
 if(!isDragging) return;
-
 currentX = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
-
 slider.style.transform =
 `translateX(calc(${currentPage * -100}% + ${currentX}px))`;
 }
@@ -152,53 +149,29 @@ else updateSlider();
 isDragging = false;
 currentX = 0;
 }
-
-/* EVENTS */
-container.addEventListener("mousedown", start);
-container.addEventListener("touchstart", start);
-
-container.addEventListener("mousemove", move);
-container.addEventListener("touchmove", move);
-
-container.addEventListener("mouseup", end);
-container.addEventListener("mouseleave", end);
-container.addEventListener("touchend", end);
 }
 
-/* ===== CONFIRM ===== */
+/* CONFIRM */
 function confirmOrder(){
-
-let fname = document.getElementById("fname").value;
-let lname = document.getElementById("lname").value;
-let phone = document.getElementById("phone").value;
-
-if(!fname || !lname || !phone || !selectedPlan || !mode){
-alert("أكمل البيانات");
+if(!selectedPlan || !mode){
+alert("اختر الشريحة وطريقة الدفع");
 return;
 }
 
-let net = mode==="yes"
-? selectedPlan.total - selectedPlan.fees
-: selectedPlan.total - selectedPlan.down - selectedPlan.fees;
-
-let msg = `
-طلب منصة تيرا
-
+let msg = `طلب منصة تيرا
 ${selectedPlan.title}
-القيمة: ${selectedPlan.total}
-الصافي: ${net}
-`;
+القيمة: ${selectedPlan.total}`;
 
 window.open("https://wa.me/966555698774?text="+encodeURIComponent(msg));
 }
 
-/* ===== RESET ===== */
+/* RESET */
 function resetAll(){
 location.reload();
 }
 
-/* ===== AUTO START ===== */
+/* AUTO START */
 window.onload = () => {
 let btn = document.querySelector('.question button:last-child');
-setMode('no', {target: btn});
+setMode('no', btn);
 };
