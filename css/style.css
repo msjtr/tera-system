@@ -1,134 +1,43 @@
-* {margin:0;padding:0;box-sizing:border-box;}
-
 body {
-font-family:'Tajawal',sans-serif;
-background:#020617;
-color:white;
-overflow-x:hidden;
+font-family: Arial;
+background: #111;
+color: white;
+text-align: center;
 }
 
 .container {
-max-width:700px;
-margin:auto;
-padding:20px;
-}
-
-.logo {
-width:90px;
-display:block;
-margin:auto;
-}
-
-.subtitle {
-text-align:center;
-color:#94a3b8;
-margin-bottom:20px;
-}
-
-.card {
-background:#1e293b;
-padding:20px;
-border-radius:16px;
-}
-
-.row {display:flex;gap:8px;}
-
-input {
-width:100%;
-padding:10px;
-margin:6px 0;
-border-radius:10px;
-border:none;
-background:#0f172a;
-color:white;
-}
-
-.question {
-text-align:center;
-margin:10px 0;
+max-width: 500px;
+margin: auto;
+padding: 20px;
 }
 
 .question button {
-background:#334155;
-color:#94a3b8;
-padding:8px 12px;
-border-radius:8px;
-margin:0 5px;
-cursor:pointer;
+margin: 5px;
+padding: 10px;
+background: #333;
+color: white;
+border: none;
+cursor: pointer;
 }
 
 .question button.active {
-background:#22c55e;
-color:white;
-}
-
-/* SLIDER */
-.slider-container {
-overflow:hidden;
-width:100%;
-margin-top:15px;
-touch-action:pan-y;
-}
-
-.slider {
-display:flex;
-transition:transform 0.4s ease;
-user-select:none;
-}
-
-.slide {
-min-width:100%;
-display:flex;
-justify-content:center;
-gap:12px;
-padding:10px;
+background: green;
 }
 
 .plan {
-flex:0 0 48%;
-background:#334155;
-padding:12px;
-border-radius:12px;
-cursor:pointer;
+background: #222;
+padding: 15px;
+margin: 10px 0;
+border-radius: 10px;
+cursor: pointer;
 }
 
 .plan.active {
-border:2px solid #22c55e;
+border: 2px solid green;
 }
 
-.plan strong {color:#22c55e;}
-
-/* PROGRESS */
-.progress-bar {
-height:6px;
-background:#1e293b;
-border-radius:10px;
-margin-top:10px;
-overflow:hidden;
-}
-
-.progress {
-height:100%;
-background:#22c55e;
-}
-
-/* BUTTONS */
-.actions {
-display:flex;
-gap:10px;
-margin-top:15px;
-}
-
-.confirm {
-flex:1;
-background:#22c55e;
-padding:10px;
-border-radius:10px;
-}
-
-.cancel {
-flex:1;
-background:#ef4444;
-padding:10px;
-border-radius:10px;
+.nav button {
+margin: 5px;
+padding: 10px;
+cursor: pointer;
 }
