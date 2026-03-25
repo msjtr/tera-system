@@ -2,64 +2,359 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>طلب شراء بطاقات سوا – تيرا</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f9f4 0%, #e0eef5 100%);
+            min-height: 100vh;
+            padding: 2rem 1rem;
+            color: #1f2d3d;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #0b3b2f;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: #4b6a8a;
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1f2d3d;
+        }
+
+        input {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            font-size: 1rem;
+            transition: all 0.2s;
+            background: #f9fafb;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+        }
+
+        .hint {
+            font-size: 0.75rem;
+            color: #6c7a91;
+            margin-top: 0.25rem;
+            display: block;
+        }
+
+        .section-title {
+            font-weight: 700;
+            margin: 1.5rem 0 1rem;
+            font-size: 1.2rem;
+            color: #0b3b2f;
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .radio-card {
+            flex: 1;
+            background: #f1f5f9;
+            border-radius: 1rem;
+            padding: 1rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            text-align: center;
+            transition: all 0.2s;
+        }
+
+        .radio-card.selected {
+            background: #e6f7ef;
+            border-color: #10b981;
+        }
+
+        .radio-card input {
+            width: auto;
+            margin-left: 0.5rem;
+            accent-color: #10b981;
+        }
+
+        .radio-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .package-card {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+            border: 2px solid #eef2f6;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .package-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .package-card.selected {
+            border-color: #10b981;
+            background: #f0fdf9;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.15);
+        }
+
+        .package-title {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0b3b2f;
+            margin-bottom: 0.75rem;
+            border-bottom: 2px dashed #cbd5e1;
+            padding-bottom: 0.5rem;
+        }
+
+        .package-detail {
+            display: flex;
+            justify-content: space-between;
+            margin: 0.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        .package-detail span:first-child {
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .package-detail span:last-child {
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 0.8rem 2rem;
+            border-radius: 2rem;
+            font-weight: 700;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #10b981;
+            color: white;
+            box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: #059669;
+            transform: scale(1.02);
+        }
+
+        .btn-secondary {
+            background: #eef2ff;
+            color: #1f2d3d;
+        }
+
+        .btn-secondary:hover {
+            background: #e2e8f0;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-content p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        /* Loading */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1100;
+            color: white;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top-color: #10b981;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .error-message {
+            color: #e11d48;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 640px) {
+            .container {
+                padding: 1.2rem;
+            }
+            .packages-grid {
+                grid-template-columns: 1fr;
+            }
+            .radio-group {
+                flex-direction: column;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <img src="assets/logo.svg" alt="شعار تيرا" class="logo">
+            <div class="logo">ت</div>
             <h1>طلب شراء بطاقات سوا</h1>
             <p class="subtitle">منصة تيرا – اختر الشريحة المناسبة</p>
         </div>
 
-        <form id="orderForm" novalidate>
-            <div class="form-group">
-                <label for="firstName">الاسم الأول *</label>
-                <input type="text" id="firstName" name="firstName" required placeholder="أدخل الاسم الأول">
-            </div>
-            <div class="form-group">
-                <label for="secondName">الاسم الثاني *</label>
-                <input type="text" id="secondName" name="secondName" required placeholder="أدخل الاسم الثاني">
-            </div>
-            <div class="form-group">
-                <label for="familyName">اسم العائلة *</label>
-                <input type="text" id="familyName" name="familyName" required placeholder="أدخل اسم العائلة">
-            </div>
-            <div class="form-group">
-                <label for="mobile">رقم الجوال (بدون 50) *</label>
-                <input type="tel" id="mobile" name="mobile" required placeholder="مثال: 512345678" inputmode="numeric" maxlength="9">
-                <small class="hint">أدخل 9 أرقام فقط، مثال: 512345678</small>
-            </div>
+        <div class="form-group">
+            <label>الاسم الأول *</label>
+            <input type="text" id="firstName" placeholder="أدخل الاسم الأول">
+        </div>
+        <div class="form-group">
+            <label>الاسم الثاني *</label>
+            <input type="text" id="secondName" placeholder="أدخل الاسم الثاني">
+        </div>
+        <div class="form-group">
+            <label>اسم العائلة *</label>
+            <input type="text" id="familyName" placeholder="أدخل اسم العائلة">
+        </div>
+        <div class="form-group">
+            <label>رقم الجوال (بدون 50) *</label>
+            <input type="tel" id="mobile" placeholder="مثال: 512345678" maxlength="9">
+            <small class="hint">أدخل 9 أرقام فقط</small>
+        </div>
 
-            <div class="payment-methods">
-                <p class="section-title">طريقة الشراء *</p>
-                <div class="radio-group">
-                    <label class="radio-card">
-                        <input type="radio" name="paymentMethod" value="platform">
-                        <span class="radio-title">🟢 دفعة من المنصة</span>
-                    </label>
-                    <label class="radio-card">
-                        <input type="radio" name="paymentMethod" value="customer">
-                        <span class="radio-title">🔵 دفعة من العميل</span>
-                    </label>
-                </div>
+        <div class="section-title">طريقة الشراء *</div>
+        <div class="radio-group" id="paymentGroup">
+            <div class="radio-card" data-method="platform">
+                <input type="radio" name="paymentMethod" value="platform"> 
+                <span class="radio-title">🟢 دفعة من المنصة</span>
             </div>
+            <div class="radio-card" data-method="customer">
+                <input type="radio" name="paymentMethod" value="customer"> 
+                <span class="radio-title">🔵 دفعة من العميل</span>
+            </div>
+        </div>
 
-            <div id="packagesContainer" class="packages-grid" style="display: none;">
-                <!-- سيتم عرض الشرائح هنا ديناميكياً -->
-            </div>
+        <div id="packagesContainer" class="packages-grid" style="display: none;"></div>
 
-            <div class="actions">
-                <button type="button" id="confirmBtn" class="btn btn-primary">تأكيد الطلب</button>
-                <button type="button" id="cancelBtn" class="btn btn-secondary">إلغاء الطلب</button>
-            </div>
-        </form>
+        <div class="actions">
+            <button class="btn btn-primary" id="confirmBtn">تأكيد الطلب</button>
+            <button class="btn btn-secondary" id="cancelBtn">إلغاء الطلب</button>
+        </div>
     </div>
 
-    <!-- مودال التأكيد المخصص -->
+    <!-- Modal التأكيد -->
     <div id="confirmModal" class="modal" style="display: none;">
         <div class="modal-content">
             <p>أنت الآن تؤكد طلب الشراء، هل ترغب في الاستمرار؟</p>
@@ -70,12 +365,280 @@
         </div>
     </div>
 
-    <!-- طبقة التحميل -->
     <div id="loadingOverlay" class="loading-overlay" style="display: none;">
         <div class="spinner"></div>
         <p>جاري إرسال الطلب...</p>
     </div>
 
-    <script src="assets/js/app.js"></script>
+    <script>
+        // بيانات الشرائح
+        const packagesData = {
+            platform: [
+                { value: 500, fees: 125, net: 375 },
+                { value: 1000, fees: 250, net: 750 },
+                { value: 1500, fees: 325, net: 1175 },
+                { value: 1880, fees: 410, net: 1470 },
+                { value: 2000, fees: 450, net: 1550 },
+                { value: 2500, fees: 575, net: 1925 }
+            ],
+            customer: [
+                { value: 500, payment: 125, fees: 125, net: 250 },
+                { value: 1000, payment: 250, fees: 250, net: 500 },
+                { value: 1500, payment: 375, fees: 325, net: 800 },
+                { value: 1880, payment: 470, fees: 410, net: 1000 },
+                { value: 2000, payment: 500, fees: 450, net: 1050 },
+                { value: 2500, payment: 625, fees: 575, net: 1300 }
+            ]
+        };
+
+        let currentMethod = null;
+        let selectedPackage = null;
+        let isSending = false;
+
+        // عناصر DOM
+        const firstName = document.getElementById('firstName');
+        const secondName = document.getElementById('secondName');
+        const familyName = document.getElementById('familyName');
+        const mobile = document.getElementById('mobile');
+        const paymentRadios = document.querySelectorAll('input[name="paymentMethod"]');
+        const paymentCards = document.querySelectorAll('.radio-card');
+        const packagesContainer = document.getElementById('packagesContainer');
+        const confirmBtn = document.getElementById('confirmBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const modal = document.getElementById('confirmModal');
+        const confirmYes = document.getElementById('confirmYes');
+        const confirmNo = document.getElementById('confirmNo');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // عرض الشرائح
+        function renderPackages(method) {
+            if (!method) {
+                packagesContainer.style.display = 'none';
+                packagesContainer.innerHTML = '';
+                return;
+            }
+            const packages = packagesData[method];
+            if (!packages) return;
+
+            packagesContainer.innerHTML = '';
+            packages.forEach((pkg, idx) => {
+                const card = document.createElement('div');
+                card.className = 'package-card';
+                card.dataset.index = idx;
+
+                let details = `<div class="package-title">${pkg.value} ريال</div>`;
+                details += `<div class="package-detail"><span>القيمة:</span><span>${pkg.value} ريال</span></div>`;
+                details += `<div class="package-detail"><span>الرسوم:</span><span>${pkg.fees} ريال</span></div>`;
+                if (method === 'customer') {
+                    details += `<div class="package-detail"><span>الدفعة:</span><span>${pkg.payment} ريال</span></div>`;
+                }
+                details += `<div class="package-detail"><span>الصافي:</span><span>${pkg.net} ريال</span></div>`;
+                card.innerHTML = details;
+
+                card.addEventListener('click', () => {
+                    document.querySelectorAll('.package-card').forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    selectedPackage = { method, ...pkg };
+                });
+                packagesContainer.appendChild(card);
+            });
+            packagesContainer.style.display = 'grid';
+        }
+
+        // إعادة ضبط كل شيء
+        function resetForm() {
+            firstName.value = '';
+            secondName.value = '';
+            familyName.value = '';
+            mobile.value = '';
+            paymentRadios.forEach(r => r.checked = false);
+            paymentCards.forEach(c => c.classList.remove('selected'));
+            currentMethod = null;
+            selectedPackage = null;
+            packagesContainer.style.display = 'none';
+            packagesContainer.innerHTML = '';
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+        }
+
+        // عرض خطأ
+        function showError(inputEl, message) {
+            let errorDiv = inputEl.parentNode.querySelector('.error-message');
+            if (!errorDiv) {
+                errorDiv = document.createElement('div');
+                errorDiv.className = 'error-message';
+                inputEl.parentNode.appendChild(errorDiv);
+            }
+            errorDiv.textContent = message;
+            inputEl.style.borderColor = '#e11d48';
+            inputEl.addEventListener('input', () => {
+                if (errorDiv) errorDiv.remove();
+                inputEl.style.borderColor = '#e2e8f0';
+            }, { once: true });
+        }
+
+        // التحقق من صحة المدخلات
+        function validate() {
+            let valid = true;
+            document.querySelectorAll('.error-message').forEach(el => el.remove());
+            document.querySelectorAll('input').forEach(i => i.style.borderColor = '#e2e8f0');
+
+            if (!firstName.value.trim()) {
+                showError(firstName, 'الاسم الأول مطلوب');
+                valid = false;
+            }
+            if (!secondName.value.trim()) {
+                showError(secondName, 'الاسم الثاني مطلوب');
+                valid = false;
+            }
+            if (!familyName.value.trim()) {
+                showError(familyName, 'اسم العائلة مطلوب');
+                valid = false;
+            }
+            const mobileVal = mobile.value.trim();
+            if (!mobileVal) {
+                showError(mobile, 'رقم الجوال مطلوب');
+                valid = false;
+            } else if (!/^\d{9}$/.test(mobileVal)) {
+                showError(mobile, 'يجب أن يتكون من 9 أرقام فقط');
+                valid = false;
+            }
+
+            if (!currentMethod) {
+                const paymentDiv = document.querySelector('.radio-group');
+                let err = paymentDiv.querySelector('.error-message');
+                if (!err) {
+                    err = document.createElement('div');
+                    err.className = 'error-message';
+                    paymentDiv.appendChild(err);
+                }
+                err.textContent = 'يرجى اختيار طريقة الشراء';
+                valid = false;
+            }
+
+            if (!selectedPackage) {
+                const container = document.getElementById('packagesContainer');
+                if (container.style.display !== 'none') {
+                    let err = container.parentNode.querySelector('.package-error');
+                    if (!err) {
+                        err = document.createElement('div');
+                        err.className = 'error-message package-error';
+                        container.parentNode.insertBefore(err, container.nextSibling);
+                    }
+                    err.textContent = 'يرجى اختيار شريحة';
+                    valid = false;
+                } else {
+                    // إذا لم تظهر الشرائح بعد، قد يكون المستخدم لم يختر طريقة الدفع
+                    if (currentMethod) {
+                        let err = container.parentNode.querySelector('.package-error');
+                        if (!err) {
+                            err = document.createElement('div');
+                            err.className = 'error-message package-error';
+                            container.parentNode.insertBefore(err, container.nextSibling);
+                        }
+                        err.textContent = 'يرجى اختيار شريحة';
+                        valid = false;
+                    }
+                }
+            }
+            return valid;
+        }
+
+        // بناء رسالة الواتساب
+        function buildWhatsAppMessage() {
+            const fullName = `${firstName.value.trim()} ${secondName.value.trim()} ${familyName.value.trim()}`;
+            const phone = mobile.value.trim();
+            const methodName = currentMethod === 'platform' ? 'دفعة من المنصة' : 'دفعة من العميل';
+            let msg = `📋 *طلب شراء بطاقة سوا - منصة تيرا*%0A`;
+            msg += `👤 *الاسم الكامل:* ${fullName}%0A`;
+            msg += `📞 *رقم الجوال:* ${phone}%0A`;
+            msg += `🛒 *نوع الطلب:* ${methodName}%0A`;
+            msg += `🎯 *الشريحة:* ${selectedPackage.value} ريال%0A`;
+            msg += `💰 *القيمة:* ${selectedPackage.value} ريال%0A`;
+            msg += `💸 *الرسوم:* ${selectedPackage.fees} ريال%0A`;
+            if (currentMethod === 'customer') {
+                msg += `💵 *الدفعة:* ${selectedPackage.payment} ريال%0A`;
+            }
+            msg += `✅ *الصافي:* ${selectedPackage.net} ريال%0A`;
+            msg += `------------------------%0A📅 تم الإرسال عبر نظام تيرا`;
+            return msg;
+        }
+
+        // إرسال واتساب
+        function sendToWhatsApp() {
+            const phoneNumber = '966500000000'; // الرقم الافتراضي يمكن تغييره
+            const message = buildWhatsAppMessage();
+            const url = `https://wa.me/${phoneNumber}?text=${message}`;
+            window.open(url, '_blank');
+        }
+
+        // تنفيذ الطلب بعد التأكيد
+        function submitOrder() {
+            if (isSending) return;
+            if (!validate()) return;
+
+            isSending = true;
+            modal.style.display = 'none';
+            loadingOverlay.style.display = 'flex';
+
+            setTimeout(() => {
+                sendToWhatsApp();
+                loadingOverlay.style.display = 'none';
+                resetForm();
+                isSending = false;
+            }, 800);
+        }
+
+        // عرض مودال التأكيد
+        function showConfirm() {
+            if (validate()) {
+                modal.style.display = 'flex';
+            }
+        }
+
+        // أحداث اختيار طريقة الدفع
+        paymentCards.forEach(card => {
+            const radio = card.querySelector('input');
+            card.addEventListener('click', (e) => {
+                // منع تكرار الحدث إذا كان النقر على الراديو نفسه
+                if (e.target !== radio) {
+                    radio.checked = true;
+                }
+                // تغيير الحالة
+                paymentCards.forEach(c => c.classList.remove('selected'));
+                card.classList.add('selected');
+                currentMethod = radio.value;
+                renderPackages(currentMethod);
+                selectedPackage = null; // إعادة تعيين الشريحة المختارة
+                // إزالة أي خطأ سابق في الشرائح
+                const pkgError = document.querySelector('.package-error');
+                if (pkgError) pkgError.remove();
+            });
+            // مزامنة عند النقر المباشر على الراديو
+            radio.addEventListener('change', (e) => {
+                if (e.target.checked) {
+                    paymentCards.forEach(c => c.classList.remove('selected'));
+                    card.classList.add('selected');
+                    currentMethod = radio.value;
+                    renderPackages(currentMethod);
+                    selectedPackage = null;
+                    const pkgError = document.querySelector('.package-error');
+                    if (pkgError) pkgError.remove();
+                }
+            });
+        });
+
+        // منع إدخال غير أرقام في حقل الجوال
+        mobile.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').slice(0,9);
+        });
+
+        confirmBtn.addEventListener('click', showConfirm);
+        cancelBtn.addEventListener('click', resetForm);
+        confirmYes.addEventListener('click', submitOrder);
+        confirmNo.addEventListener('click', () => modal.style.display = 'none');
+
+        // بداية فارغة
+        resetForm();
+    </script>
 </body>
 </html>
