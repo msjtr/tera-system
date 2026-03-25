@@ -1,7 +1,6 @@
 let mode = "";
 let currentPage = 0;
 let selectedPlan = null;
-let swipeInitialized = false;
 
 const data = [
 {title:"الشريحة الأولى", total:500, down:125, fees:125},
@@ -12,7 +11,6 @@ const data = [
 {title:"الشريحة السادسة", total:2500, down:625, fees:575}
 ];
 
-/* MODE */
 function setMode(m, el){
 mode = m;
 
@@ -20,157 +18,60 @@ document.querySelectorAll(".question button").forEach(b=>b.classList.remove("act
 el.classList.add("active");
 
 currentPage = 0;
-renderSlider();
+render();
 }
 
-/* RENDER */
-function renderSlider(){
+function render(){
 
-let slider = document.getElementById("slider");
-let pages = [];
+let start = currentPage * 2;
+let items = data.slice(start, start+2);
 
-for(let i=0;i<data.length;i+=2){
+let html = "";
 
-let items = data.slice(i,i+2);
-let slide = `<div class="slide">`;
+items.forEach((item,i)=>{
 
-items.forEach((item,index)=>{
-
-let realIndex = i+index;
+let realIndex = start + i;
 
 let net = mode==="yes"
 ? item.total - item.fees
 : item.total - item.down - item.fees;
 
-slide += `
+html += `
 <div class="plan" onclick="selectPlan(${realIndex})" id="plan-${realIndex}">
 <h3>${item.title}</h3>
-<p>${item.total} ريال</p>
-${mode==="no"? `<p>دفعة: ${item.down}</p>`:""}
-<p>رسوم: ${item.fees}</p>
-<strong>${net} ريال</strong>
+<p>القيمة: ${item.total}</p>
+${mode==="no" ? `<p>الدفعة: ${item.down}</p>` : ""}
+<p>الرسوم: ${item.fees}</p>
+<strong>الصافي: ${net}</strong>
 </div>
 `;
 });
 
-slide += `</div>`;
-pages.push(slide);
+document.getElementById("plans").innerHTML = html;
 }
 
-slider.innerHTML = pages.join("");
-updateSlider();
-renderProgress();
-
-if(!swipeInitialized){
-initSwipe();
-swipeInitialized = true;
-}
-}
-
-/* SLIDE MOVE */
-function updateSlider(){
-document.getElementById("slider").style.transform =
-`translateX(${currentPage * -100}%)`;
-}
-
-/* PROGRESS */
-function renderProgress(){
-let total = Math.ceil(data.length/2);
-document.getElementById("pagination").innerHTML = `
-<div class="progress-bar">
-<div class="progress" style="width:${((currentPage+1)/total)*100}%"></div>
-</div>`;
-}
-
-/* SELECT */
 function selectPlan(i){
 selectedPlan = data[i];
+
 document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
 document.getElementById("plan-"+i).classList.add("active");
 }
 
-/* NAV */
 function next(){
 if(currentPage < Math.ceil(data.length/2)-1){
 currentPage++;
-updateSlider();
-renderProgress();
+render();
 }
 }
 
 function prev(){
 if(currentPage > 0){
 currentPage--;
-updateSlider();
-renderProgress();
+render();
 }
 }
 
-/* SWIPE */
-function initSwipe(){
-
-let container = document.querySelector(".slider-container");
-let slider = document.getElementById("slider");
-
-let startX = 0;
-let currentX = 0;
-let isDragging = false;
-
-container.addEventListener("mousedown", start);
-container.addEventListener("touchstart", start);
-
-container.addEventListener("mousemove", move);
-container.addEventListener("touchmove", move);
-
-container.addEventListener("mouseup", end);
-container.addEventListener("mouseleave", end);
-container.addEventListener("touchend", end);
-
-function start(e){
-isDragging = true;
-startX = e.touches ? e.touches[0].clientX : e.clientX;
-slider.style.transition = "none";
-}
-
-function move(e){
-if(!isDragging) return;
-currentX = (e.touches ? e.touches[0].clientX : e.clientX) - startX;
-slider.style.transform =
-`translateX(calc(${currentPage * -100}% + ${currentX}px))`;
-}
-
-function end(){
-if(!isDragging) return;
-
-if(currentX < -60) next();
-else if(currentX > 60) prev();
-else updateSlider();
-
-isDragging = false;
-currentX = 0;
-}
-}
-
-/* CONFIRM */
-function confirmOrder(){
-if(!selectedPlan || !mode){
-alert("اختر الشريحة وطريقة الدفع");
-return;
-}
-
-let msg = `طلب منصة تيرا
-${selectedPlan.title}
-القيمة: ${selectedPlan.total}`;
-
-window.open("https://wa.me/966555698774?text="+encodeURIComponent(msg));
-}
-
-/* RESET */
-function resetAll(){
-location.reload();
-}
-
-/* AUTO START */
+/* تشغيل تلقائي */
 window.onload = () => {
 let btn = document.querySelector('.question button:last-child');
 setMode('no', btn);
