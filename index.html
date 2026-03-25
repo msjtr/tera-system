@@ -35,13 +35,12 @@
 
 <div class="question">
 <p>هل لديكم دفعة أولى؟</p>
-<button onclick="setMode('yes',event)">نعم</button>
-<button onclick="setMode('no',event)">لا</button>
+<button onclick="setMode('yes', this)">نعم</button>
+<button onclick="setMode('no', this)">لا</button>
 </div>
 
-<!-- SLIDER -->
 <div class="slider-container">
-    <div id="slider" class="slider"></div>
+<div id="slider" class="slider"></div>
 </div>
 
 <div id="pagination"></div>
@@ -51,15 +50,6 @@
 <button class="cancel" onclick="resetAll()">إلغاء الطلب</button>
 </div>
 
-</div>
-</div>
-
-<div id="modal" class="modal hidden">
-<div class="modal-content">
-<p>جاري إرسال الطلب...</p>
-<div class="loader"></div>
-<p id="status"></p>
-<button onclick="closeModal()">إغلاق</button>
 </div>
 </div>
 
