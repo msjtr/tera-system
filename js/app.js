@@ -11,6 +11,7 @@ const data = [
 {title:"الشريحة السادسة", total:2500, down:625, fees:575}
 ];
 
+/* اختيار الوضع */
 function setMode(m, el){
 mode = m;
 
@@ -21,6 +22,7 @@ currentPage = 0;
 render();
 }
 
+/* عرض الشرائح */
 function render(){
 
 let start = currentPage * 2;
@@ -39,10 +41,10 @@ let net = mode==="yes"
 html += `
 <div class="plan" onclick="selectPlan(${realIndex})" id="plan-${realIndex}">
 <h3>${item.title}</h3>
-<p>القيمة: ${item.total}</p>
-${mode==="no" ? `<p>الدفعة: ${item.down}</p>` : ""}
-<p>الرسوم: ${item.fees}</p>
-<strong>الصافي: ${net}</strong>
+<p>القيمة: ${item.total} ريال</p>
+${mode==="no" ? `<p>الدفعة: ${item.down} ريال</p>` : ""}
+<p>الرسوم: ${item.fees} ريال</p>
+<strong>الصافي: ${net} ريال</strong>
 </div>
 `;
 });
@@ -50,6 +52,7 @@ ${mode==="no" ? `<p>الدفعة: ${item.down}</p>` : ""}
 document.getElementById("plans").innerHTML = html;
 }
 
+/* اختيار شريحة */
 function selectPlan(i){
 selectedPlan = data[i];
 
@@ -57,6 +60,7 @@ document.querySelectorAll(".plan").forEach(p=>p.classList.remove("active"));
 document.getElementById("plan-"+i).classList.add("active");
 }
 
+/* التالي */
 function next(){
 if(currentPage < Math.ceil(data.length/2)-1){
 currentPage++;
@@ -64,6 +68,7 @@ render();
 }
 }
 
+/* السابق */
 function prev(){
 if(currentPage > 0){
 currentPage--;
@@ -71,8 +76,18 @@ render();
 }
 }
 
+/* تأكيد */
+function confirmOrder(){
+if(!selectedPlan){
+alert("اختر شريحة");
+return;
+}
+
+alert("تم اختيار: " + selectedPlan.title);
+}
+
 /* تشغيل تلقائي */
-window.onload = () => {
+window.onload = ()=>{
 let btn = document.querySelector('.question button:last-child');
 setMode('no', btn);
 };
